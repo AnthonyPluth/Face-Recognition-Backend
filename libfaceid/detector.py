@@ -1,7 +1,6 @@
-from PIL import Image
-
-import numpy as np
 from enum import Enum
+from PIL import Image
+import numpy as np
 import cv2
 
 

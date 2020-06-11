@@ -1,9 +1,9 @@
 from libfaceid.encoder import FaceEncoder
 from libfaceid.detector import FaceDetector
 import base64
-from . import config
-from . import utils
 import cv2
+import face_rec_api.config as config
+import face_rec_api.utils as utils
 import numpy as np
 import time
 
@@ -19,7 +19,7 @@ def get_faces(frame):
 
 def crop_frame(frame, face):
     (x, y, w, h) = face
-    return frame[y:y+h, x:x+w]
+    return frame[y:y + h, x:x + w]
 
 
 def frame_has_blur(frame):

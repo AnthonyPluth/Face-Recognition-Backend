@@ -1,9 +1,9 @@
+from face_rec_api import image_processing
+from face_rec_api import training
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import cv2
-import image_processing
 import json
-import training
 
 app = Flask(__name__)
 cors = CORS(app, support_credentials=True)
@@ -71,5 +71,6 @@ def train_model():
     training.run()
     return {'training status': 'complete'}
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)

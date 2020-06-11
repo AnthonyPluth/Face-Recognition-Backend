@@ -52,5 +52,6 @@ class TestImageProcessing(unittest.TestCase):
         os.remove('datasets/test/pytest.png')
         os.rmdir('datasets/test')
 
+
 if __name__ == '__main__':
     unittest.main()

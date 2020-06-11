@@ -1,11 +1,11 @@
-import cv2
-import os
-import numpy as np
 from enum import Enum
-import pickle                  # for FaceEncoderModels.OPENFACE and FaceEncoderModels.DLIBRESNET
+from libfaceid.classifier import FaceClassifierModels, FaceClassifier
 from imutils import paths      # for FaceEncoderModels.LBPH
 from sklearn.preprocessing import LabelEncoder  # for FaceEncoderModels
-from libfaceid.classifier import FaceClassifierModels, FaceClassifier
+import cv2
+import numpy as np
+import os
+import pickle                  # for FaceEncoderModels.OPENFACE and FaceEncoderModels.DLIBRESNET
 
 
 OUTPUT_LBPH_CLASSIFIER = 'lbph.yml'

@@ -4,9 +4,6 @@
 ```bash
 cd api
 pip3 install -e .
-
-# For testing, use:
-pip3 install -e '.[testing]'
 ```
 
 ## Running the API
