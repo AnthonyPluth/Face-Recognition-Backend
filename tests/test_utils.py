@@ -1,6 +1,6 @@
 import os
 import unittest
-import utils
+from face_rec_api import utils
 
 
 class TestUtils(unittest.TestCase):

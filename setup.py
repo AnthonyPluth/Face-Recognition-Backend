@@ -7,7 +7,7 @@ requirements = [
     'opencv-python>=4.1.0.25',
     'requests>=2.23.0',
     'coverage>=5.1',
-    'tensorflow>=1.14.0',
+    'tensorflow==1.15.3',
 ]
 
 tests_require = [
@@ -16,14 +16,12 @@ tests_require = [
 ]
 
 setup(
-    name='face_rec_react',
+    name='face_rec_api',
     version=0.5,
     author='Anthony Pluth',
     author_email='abpluth@gmail.com',
-    packages=['libfaceid', 'tests'],
+    packages=['face_rec_api', 'libfaceid', 'tests'],
     install_requires=requirements,
-    extras_require={
-        'testing': tests_require,
-    },
+    tests_require=tests_require,
     zip_safe=False,
 )

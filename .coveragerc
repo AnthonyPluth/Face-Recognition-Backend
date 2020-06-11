@@ -2,5 +2,5 @@
 omit =
     */site-packages/*
     */distutils/*
-    */libfaceid/*
+    libfaceid/*
     tests/*

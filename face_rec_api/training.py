@@ -1,10 +1,10 @@
 from libfaceid.detector import FaceDetector
 from libfaceid.encoder import FaceEncoder
-from utils import ensure_directory
+from . utils import ensure_directory
 import cv2
 import os
-import config
-import image_processing
+from . import config
+from . import image_processing
 
 
 def get_dataset_names(file_path):

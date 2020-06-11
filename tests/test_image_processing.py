@@ -1,4 +1,4 @@
-import image_processing
+from face_rec_api import image_processing
 import cv2
 import numpy as np
 import unittest

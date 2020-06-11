@@ -1,11 +1,11 @@
 from libfaceid.encoder import FaceEncoder
 from libfaceid.detector import FaceDetector
 import base64
-import config
+from . import config
+from . import utils
 import cv2
 import numpy as np
 import time
-import utils
 
 face_detector = FaceDetector(model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING)
 face_encoder = FaceEncoder(model=config.encoding_model, path=config.INPUT_DIR_MODEL_ENCODING,
