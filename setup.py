@@ -3,6 +3,9 @@ from setuptools import setup
 requirements = [
     'coverage>=5.1',
     'facenet>=1.0.5',
+    'flask>=1.1.2',
+    'flask-cors>=3.0.8',
+    'gunicorn>=20.0.4',
     'imutils>=0.5.3',
     'numpy>=1.16.4',
     'opencv-python>=4.1.0.25',
