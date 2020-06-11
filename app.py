@@ -44,7 +44,6 @@ def find_faces_from_snapshot():
 @app.route('/add_person/<name>', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def add_new_person(name):
-    print(name)
     print(f'received {request.method} request on /add_person endpoint')
     data = request.get_json()['body']
     encoded_image = json.loads(data)['snapshot']
@@ -55,12 +54,7 @@ def add_new_person(name):
     if faces[0]:
         cropped_img = image_processing.crop_frame(img, faces[0])
 
-        # make directory for persone (if needed)
-        # dataset_directory = config.INPUT_DIR_DATASET + '/' + name + '/'
-        # ensure_directory(dataset_directory)
-
         # save image
-        print(name)
         image_processing.save_image(cropped_img, name)
     return {"status": 200}
 

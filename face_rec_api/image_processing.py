@@ -46,7 +46,9 @@ def identify_person(cropped):
     return face_id, confidence
 
 
-def save_image(image, directory, filename=f'{time.time()}.png'):
+def save_image(image, directory, filename=None):
+    if not filename:
+        filename = f'{time.time()}.png'
     utils.ensure_directory(f'datasets/{directory}/')
     save_path = f"datasets/{directory}/{filename}"
     cv2.imwrite(save_path, image)
