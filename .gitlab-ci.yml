@@ -1,6 +1,6 @@
 stages:
   - test
-  - code_quality
+  - qa
 
 before_script:
   - mkdir datasets
@@ -14,3 +14,10 @@ test_python:
   artifacts:
     paths:
       - htmlcov
+
+qa_lint:
+  image: python:3.7
+  stage: qa
+  script:
+  - pip3 install tox
+  - tox -e lint
