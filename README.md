@@ -1,14 +1,15 @@
 # Face Recognition
 
+## Prerequisites
+- [ ] Python3.7 or greater installed
+
 ## Backend Setup
 ```bash
-cd api
 pip3 install -e .
 ```
 
 ## Running the API
 ```bash
-cd api
 gunicorn --bind=0.0.0.0:5000 app:app
 ```
 

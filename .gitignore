@@ -10,8 +10,9 @@
 .coverage.*
 .eggs
 .env
-.tox          
+.tox
 /.mypy_cache
+/.pytest_cache
 */__pycache__/
 datasets/
 docs/build/html/*
