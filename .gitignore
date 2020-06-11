@@ -14,3 +14,4 @@
 */__pycache__/
 datasets/
 docs/build/html/*
+htmlcov

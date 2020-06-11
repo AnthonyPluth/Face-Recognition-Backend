@@ -1,12 +1,16 @@
 stages:
   - test
+  - code_quality
 
 before_script:
   - mkdir datasets
-  
+
 test_python:
   image: python:3.7
   stage: test
   script:
   - pip3 install tox
   - tox -e py37
+  artifacts:
+    paths:
+      - htmlcov
