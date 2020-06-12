@@ -2,6 +2,7 @@
 *.egg
 *.egg-info
 *.log
+*.pem
 *.pyc
 *.sw*
 *.zip
@@ -15,5 +16,6 @@
 /.pytest_cache
 */__pycache__/
 datasets/
+DELETE/
 docs/build/html/*
 htmlcov

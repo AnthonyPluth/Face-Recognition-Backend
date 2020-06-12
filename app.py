@@ -9,14 +9,6 @@ app = Flask(__name__)
 cors = CORS(app, support_credentials=True)
 
 
-@app.after_request
-def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = "http://localhost:3000"
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
-    response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
-    return response
-
-
 @app.route('/identify', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def find_faces_from_snapshot():

@@ -41,7 +41,6 @@ def test_recognition():
 
 
 def prep_images():
-    import config
     face_detector = FaceDetector(model=config.detecting_model,
                                  path=config.INPUT_DIR_MODEL_DETECTING)
 
@@ -68,6 +67,7 @@ def prep_images():
 
 
 def delete_file(file_path, filename):
+    ensure_directory('DELETE/')
     os.rename(file_path, 'DELETE/' + filename)
 
 
