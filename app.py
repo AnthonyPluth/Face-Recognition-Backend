@@ -8,7 +8,7 @@ import json
 app = Flask(__name__)
 
 # TODO: make image_processing functions async (again)
-# TODO: switch to sanic/bottle/aiohttp for async server
+# TODO: switch to sanic/bottle/aiohttp/vibora for async server
 
 
 @app.route('/identify', methods=['POST', 'OPTIONS'])
