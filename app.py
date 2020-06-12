@@ -1,12 +1,14 @@
 from face_rec_api import image_processing
 from face_rec_api import training
 from flask import Flask, request
-from flask_cors import CORS, cross_origin
+from flask_cors import cross_origin
 import cv2
 import json
 
 app = Flask(__name__)
-cors = CORS(app, support_credentials=True)
+
+# TODO: make image_processing functions async (again)
+# TODO: switch to sanic/bottle/aiohttp for async server
 
 
 @app.route('/identify', methods=['POST', 'OPTIONS'])
@@ -62,7 +64,3 @@ def train_model():
 @cross_origin()
 def health_check():
     return {'status': 'up'}
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)

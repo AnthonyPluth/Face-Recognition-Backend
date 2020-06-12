@@ -1,7 +1,6 @@
 from setuptools import setup
 
 requirements = [
-    'coverage>=5.1',
     'facenet>=1.0.5',
     'flask>=1.1.2',
     'flask-cors>=3.0.8',
@@ -14,6 +13,7 @@ requirements = [
 ]
 
 tests_require = [
+    'coverage>=5.1',
     'pytest >= 4.6.11',
     'WebTest >= 1.3.1',
 ]
