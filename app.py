@@ -58,5 +58,11 @@ def train_model():
     return {'training status': 'complete'}
 
 
+@app.route('/health', methods=['GET', 'OPTIONS'])
+@cross_origin()
+def health_check():
+    return {'status': 'up'}
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)

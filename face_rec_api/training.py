@@ -7,20 +7,20 @@ import face_rec_api.image_processing as image_processing
 import os
 
 
-def get_dataset_names(file_path):
-    for (_d, names, _f) in os.walk(file_path):
-        return names
-    return None
+# def get_dataset_names(file_path):
+#     for (_d, names, _f) in os.walk(file_path):
+#         return names
+#     return None
 
 
 def train_recognition(verify):
     ensure_directory(config.INPUT_DIR_DATASET)
 
-    names = get_dataset_names(config.INPUT_DIR_DATASET)
-    if names is not None:
-        for name in names:
-            for (_d, _n, files) in os.walk(config.INPUT_DIR_DATASET + "/" + name):
-                print(name + ": " + str(files))
+    # names = get_dataset_names(config.INPUT_DIR_DATASET)
+    # if names is not None:
+    #     for name in names:
+    #         for (_d, _n, files) in os.walk(config.INPUT_DIR_DATASET + "/" + name):
+    #             print(name + ": " + str(files))
 
     ensure_directory(config.INPUT_DIR_MODEL_TRAINING)
     face_detector = FaceDetector(model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING)
@@ -48,7 +48,6 @@ def prep_images():
         subdir_path = config.INPUT_DIR_DATASET + '/' + subdir
         for filename in os.listdir(subdir_path):
             file_path = subdir_path + '/' + filename
-            print(filename)
             if filename == '.DS_Store':
                 delete_file(file_path, filename)
 
@@ -64,6 +63,7 @@ def prep_images():
                 # Delete images if we don't find exactlty one face
                 print(f'deleting {file_path} due to number of faces')
                 delete_file(file_path, filename)
+                continue
 
 
 def delete_file(file_path, filename):
