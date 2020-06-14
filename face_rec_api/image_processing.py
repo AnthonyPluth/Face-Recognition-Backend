@@ -36,7 +36,7 @@ def base64_to_numpy_array(encoded_image):
 
 
 def numpy_array_to_base64(image):
-    _, bytes_image = cv2.imencode('.png', image)
+    _, bytes_image = cv2.imencode('.webp', image)
     base64_image = base64.b64encode(bytes_image)
     return base64_image
 
@@ -48,7 +48,7 @@ def identify_person(cropped):
 
 def save_image(image, directory, filename=None):
     if not filename:
-        filename = f'{time.time()}.png'
+        filename = f'{time.time()}.webp'
     utils.ensure_directory(f'datasets/{directory}/')
     save_path = f"datasets/{directory}/{filename}"
     cv2.imwrite(save_path, image)

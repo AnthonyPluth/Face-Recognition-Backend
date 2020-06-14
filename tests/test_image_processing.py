@@ -3,10 +3,10 @@ import cv2
 import numpy as np
 import unittest
 
-sample_frame = cv2.imread('tests/reference/sample_frame.png')
-unknown_face = cv2.imread('tests/reference/ai_face.png')
-known_face = cv2.imread('tests/reference/maddie.png')
-blurry_image = cv2.imread('tests/reference/blurry_image.png')
+sample_frame = cv2.imread('tests/reference/sample_frame.webp')
+unknown_face = cv2.imread('tests/reference/ai_face.webp')
+known_face = cv2.imread('tests/reference/maddie.webp')
+blurry_image = cv2.imread('tests/reference/blurry_image.webp')
 
 
 class TestImageProcessing(unittest.TestCase):
@@ -42,14 +42,14 @@ class TestImageProcessing(unittest.TestCase):
         np.testing.assert_array_equal(base64_encoded, base64_converted)
 
     def test_save_image(self):
-        image_processing.save_image(known_face, 'test', 'pytest.png')
-        saved_image = cv2.imread('datasets/test/pytest.png')
+        image_processing.save_image(known_face, 'test', 'pytest.webp')
+        saved_image = cv2.imread('datasets/test/pytest.webp')
         self.assertEqual(bytes(known_face), bytes(saved_image))
 
     @classmethod
     def tearDownClass(self):
         import os
-        os.remove('datasets/test/pytest.png')
+        os.remove('datasets/test/pytest.webp')
         os.rmdir('datasets/test')
 
 
