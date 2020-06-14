@@ -19,7 +19,6 @@ def find_faces_from_snapshot():
     print(f'received {request.method} request on /identify endpoint')
     data = request.get_json()['body']
     encoded_image = json.loads(data)['snapshot']
-    encoded_image = encoded_image.split(',')[1]
 
     img = image_processing.base64_to_numpy_array(encoded_image)
     faces = image_processing.get_faces(img)
@@ -32,9 +31,9 @@ def find_faces_from_snapshot():
     if len(faces) > 0:
         cropped_img = image_processing.crop_frame(img, faces[0])
         name, confidence = image_processing.identify_person(cropped_img)
-        encoded_image = image_processing.numpy_array_to_base64(img).decode('utf-8')
+        encoded_image = image_processing.numpy_array_to_base64(img)
 
-    return {'framed_image': encoded_image, 'name': name, 'confidence': confidence}
+    return {'framed_image': encoded_image.split(',')[1], 'name': name, 'confidence': confidence}
 
 
 @app.route('/add_person/<name>', methods=['POST', 'OPTIONS'])
@@ -43,7 +42,6 @@ def add_new_person(name):
     print(f'received {request.method} request on /add_person endpoint')
     data = request.get_json()['body']
     encoded_image = json.loads(data)['snapshot']
-    encoded_image = encoded_image.split(',')[1]
 
     img = image_processing.base64_to_numpy_array(encoded_image)
     faces = image_processing.get_faces(img)
@@ -56,7 +54,7 @@ def add_new_person(name):
         # save image
         image_processing.save_image(cropped_img, name)
 
-    return {'framed_image': framed_img.decode('utf-8')}
+    return {'framed_image': framed_img}
 
 
 @app.route('/train_model', methods=['GET', 'OPTIONS'])
