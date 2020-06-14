@@ -15,6 +15,7 @@ requirements = [
 tests_require = [
     'coverage>=5.1',
     'pytest >= 4.6.11',
+    'tox>=3.1.0',
     'WebTest >= 1.3.1',
 ]
 

@@ -1,19 +1,19 @@
 from face_rec_api import image_processing
 import cv2
-import numpy as np
 import unittest
 
-sample_frame = cv2.imread('tests/reference/sample_frame.png')
-unknown_face = cv2.imread('tests/reference/ai_face.png')
-known_face = cv2.imread('tests/reference/maddie.png')
-blurry_image = cv2.imread('tests/reference/blurry_image.png')
+sample_frame = cv2.imread('tests/reference/sample_frame.webp')
+unknown_face = cv2.imread('tests/reference/ai_face.webp')
+known_face = cv2.imread('tests/reference/maddie.webp')
+blurry_image = cv2.imread('tests/reference/blurry_image.webp')
 
 
 class TestImageProcessing(unittest.TestCase):
 
     def test_get_faces(self):
         faces = image_processing.get_faces(sample_frame)
-        self.assertEqual(faces[0], (127, 96, 272, 361))
+        print(faces[0])
+        self.assertEqual(faces[0], (126, 100, 272, 355))
 
     def test_crop_frame(self):
         cropped_frame = image_processing.crop_frame(sample_frame, (127, 96, 272, 361))
@@ -39,17 +39,18 @@ class TestImageProcessing(unittest.TestCase):
         base64_encoded = image_processing.numpy_array_to_base64(known_face)
         converted_image = image_processing.base64_to_numpy_array(base64_encoded)
         base64_converted = image_processing.numpy_array_to_base64(converted_image)
-        np.testing.assert_array_equal(base64_encoded, base64_converted)
+        # np.testing.assert_array_equal(base64_encoded, base64_converted)
+        self.assertEqual(base64_encoded, base64_converted)
 
     def test_save_image(self):
-        image_processing.save_image(known_face, 'test', 'pytest.png')
-        saved_image = cv2.imread('datasets/test/pytest.png')
+        image_processing.save_image(known_face, 'test', 'pytest.webp')
+        saved_image = cv2.imread('datasets/test/pytest.webp')
         self.assertEqual(bytes(known_face), bytes(saved_image))
 
     @classmethod
     def tearDownClass(self):
         import os
-        os.remove('datasets/test/pytest.png')
+        os.remove('datasets/test/pytest.webp')
         os.rmdir('datasets/test')
 
 
