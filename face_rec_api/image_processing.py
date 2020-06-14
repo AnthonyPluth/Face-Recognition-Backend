@@ -30,14 +30,15 @@ def frame_has_blur(frame):
 
 
 def base64_to_numpy_array(encoded_image):
-    nparr = np.frombuffer(base64.b64decode(encoded_image), np.uint8)
+    raw = encoded_image.split(',')[1]
+    nparr = np.frombuffer(base64.b64decode(raw), np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     return img
 
 
 def numpy_array_to_base64(image):
     _, bytes_image = cv2.imencode('.webp', image)
-    base64_image = base64.b64encode(bytes_image)
+    base64_image = "data:image/webp;base64," + base64.b64encode(bytes_image).decode('utf-8')
     return base64_image
 
 
