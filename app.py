@@ -4,11 +4,13 @@ from flask import Flask, request
 from flask_cors import cross_origin
 import cv2
 import json
+import tensorflow as tf
 
 app = Flask(__name__)
 
 # TODO: make image_processing functions async (again)
 # TODO: switch to sanic/bottle/aiohttp/vibora for async server
+# TODO: switch from .png to webp
 
 
 @app.route('/identify', methods=['POST', 'OPTIONS'])
@@ -26,13 +28,13 @@ def find_faces_from_snapshot():
         (x, y, w, h) = face
         cv2.rectangle(img, (x, y), (x + w, y + h), (36, 255, 12), 2)
 
-    framed_img = image_processing.numpy_array_to_base64(img)
-
     name, confidence = None, None
     if len(faces) > 0:
         cropped_img = image_processing.crop_frame(img, faces[0])
         name, confidence = image_processing.identify_person(cropped_img)
-    return {'framed_image': framed_img.decode('utf-8'), 'name': name, 'confidence': confidence}
+        encoded_image = image_processing.numpy_array_to_base64(img).decode('utf-8')
+
+    return {'framed_image': encoded_image, 'name': name, 'confidence': confidence}
 
 
 @app.route('/add_person/<name>', methods=['POST', 'OPTIONS'])
@@ -47,10 +49,14 @@ def add_new_person(name):
     faces = image_processing.get_faces(img)
     if faces[0]:
         cropped_img = image_processing.crop_frame(img, faces[0])
+        (x, y, w, h) = faces[0]
+        cv2.rectangle(img, (x, y), (x + w, y + h), (36, 255, 12), 2)
+        framed_img = image_processing.numpy_array_to_base64(img)
 
         # save image
         image_processing.save_image(cropped_img, name)
-    return {"status": 200}
+
+    return {'framed_image': framed_img.decode('utf-8')}
 
 
 @app.route('/train_model', methods=['GET', 'OPTIONS'])
@@ -60,7 +66,8 @@ def train_model():
     return {'training status': 'complete'}
 
 
-@app.route('/health', methods=['GET', 'OPTIONS'])
+@app.route('/status', methods=['GET', 'OPTIONS'])
 @cross_origin()
-def health_check():
-    return {'status': 'up'}
+def status():
+    # return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': len(tf.config.experimental.list_physical_devices('GPU'))>0}
+    return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': True}
