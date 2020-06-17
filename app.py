@@ -1,16 +1,16 @@
 from face_rec_api import image_processing
 from face_rec_api import training
 from flask import Flask, request
-from flask_cors import cross_origin
+from flask_cors import CORS, cross_origin
 import cv2
 import json
 import tensorflow as tf
 
 app = Flask(__name__)
-
+CORS(app)
 # TODO: make image_processing functions async (again)
-# TODO: switch to sanic/bottle/aiohttp/vibora for async server
-# TODO: switch from .png to webp
+# TODO: switch to FastAPI/starlette.io/web2py/Pyramid/Tornado/sanic for async server
+# TODO: add endpoint to restart api (in order to load newly trained model)
 
 
 @app.route('/identify', methods=['POST', 'OPTIONS'])
