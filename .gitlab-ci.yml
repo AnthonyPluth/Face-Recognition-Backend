@@ -1,7 +1,7 @@
 stages:
   - test
   - qa
-  - pages
+  - deploy
 
 before_script:
   - mkdir datasets
@@ -26,7 +26,7 @@ qa_lint:
 pages:
   stage: deploy
   dependencies:
-    - test_react
+    - test_python
   script:
     - mv coverage/ public/
   artifacts:
