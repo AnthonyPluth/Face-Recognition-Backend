@@ -1,6 +1,7 @@
 stages:
   - test
   - qa
+  - pages
 
 before_script:
   - mkdir datasets
@@ -21,3 +22,16 @@ qa_lint:
   script:
   - pip3 install tox
   - tox -e lint
+
+pages:
+  stage: deploy
+  dependencies:
+    - test_react
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
