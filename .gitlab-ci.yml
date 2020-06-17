@@ -28,7 +28,7 @@ pages:
   dependencies:
     - test_python
   script:
-    - mv coverage/ public/
+    - mv htmlcov/ public/
   artifacts:
     paths:
       - public
