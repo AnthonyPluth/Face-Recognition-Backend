@@ -7,6 +7,8 @@ before_script:
   - mkdir datasets
 
 test_python:
+  tags:
+    - my_runner
   image: python:3.7
   stage: test
   script:
@@ -17,6 +19,8 @@ test_python:
       - htmlcov
 
 qa_lint:
+  tags:
+    - my_runner
   image: python:3.7
   stage: qa
   script:
@@ -24,6 +28,8 @@ qa_lint:
   - tox -e lint
 
 pages:
+  tags:
+    - my_runner
   stage: deploy
   dependencies:
     - test_python

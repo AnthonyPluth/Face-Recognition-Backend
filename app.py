@@ -69,4 +69,4 @@ def train_model():
 @cross_origin()
 def status():
     print(f'received {request.method} request on /status endpoint')
-    return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': len(tf.config.experimental.list_physical_devices('GPU'))>0}
+    return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': len(tf.config.experimental.list_physical_devices('GPU')) > 0}
