@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # TODO: make image_processing functions async (again)
 # TODO: switch to sanic/bottle/aiohttp/vibora for async server
-# TODO: switch from .png to webp
+# TODO: switch to websockets?
 
 
 @app.route('/identify', methods=['POST', 'OPTIONS'])
@@ -60,6 +60,7 @@ def add_new_person(name):
 @app.route('/train_model', methods=['GET', 'OPTIONS'])
 @cross_origin()
 def train_model():
+    print(f'received {request.method} request on /train_model endpoint')
     training.run()
     return {'training status': 'complete'}
 
@@ -67,5 +68,5 @@ def train_model():
 @app.route('/status', methods=['GET', 'OPTIONS'])
 @cross_origin()
 def status():
-    # return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': len(tf.config.experimental.list_physical_devices('GPU'))>0}
-    return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': True}
+    print(f'received {request.method} request on /status endpoint')
+    return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': len(tf.config.experimental.list_physical_devices('GPU'))>0}
