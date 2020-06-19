@@ -33,7 +33,7 @@ def find_faces_from_snapshot():
         cropped_img = image_processing.crop_frame(img, faces[0])
         name, confidence = image_processing.identify_person(cropped_img)
 
-    return {'name': name, 'confidence': confidence, "bboxes": bboxes}
+    return {'name': name, 'confidence': confidence, "bounding_boxes": bboxes}
 
 
 @app.route('/add_person/<name>', methods=['POST', 'OPTIONS'])
@@ -56,7 +56,7 @@ def add_new_person(name):
         # save image
         image_processing.save_image(cropped_img, name)
 
-    return {'bboxes': bboxes}
+    return {"bounding_boxes": bboxes}
 
 
 @app.route('/train_model', methods=['GET', 'OPTIONS'])
