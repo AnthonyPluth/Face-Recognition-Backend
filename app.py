@@ -23,17 +23,17 @@ def find_faces_from_snapshot():
     img = image_processing.base64_to_numpy_array(encoded_image)
     faces = image_processing.get_faces(img)
 
+    bboxes = []
     for face in faces:
         (x, y, w, h) = face
-        cv2.rectangle(img, (x, y), (x + w, y + h), (36, 255, 12), 2)
+        bboxes.append({"x": x, "y": y, "w": w, "h": h})
 
     name, confidence = None, None
     if len(faces) > 0:
         cropped_img = image_processing.crop_frame(img, faces[0])
         name, confidence = image_processing.identify_person(cropped_img)
-        encoded_image = image_processing.numpy_array_to_base64(img)
 
-    return {'framed_image': encoded_image.split(',')[1], 'name': name, 'confidence': confidence}
+    return {'name': name, 'confidence': confidence, "bboxes": bboxes}
 
 
 @app.route('/add_person/<name>', methods=['POST', 'OPTIONS'])
@@ -45,16 +45,18 @@ def add_new_person(name):
 
     img = image_processing.base64_to_numpy_array(encoded_image)
     faces = image_processing.get_faces(img)
+    bboxes = []
+    for face in faces:
+        (x, y, w, h) = face
+        bboxes.append({"x": x, "y": y, "w": w, "h": h})
+
     if faces[0]:
         cropped_img = image_processing.crop_frame(img, faces[0])
-        (x, y, w, h) = faces[0]
-        cv2.rectangle(img, (x, y), (x + w, y + h), (36, 255, 12), 2)
-        framed_img = image_processing.numpy_array_to_base64(img)
 
         # save image
         image_processing.save_image(cropped_img, name)
 
-    return {'framed_image': framed_img}
+    return {'bboxes': bboxes}
 
 
 @app.route('/train_model', methods=['GET', 'OPTIONS'])
@@ -70,3 +72,7 @@ def train_model():
 def status():
     print(f'received {request.method} request on /status endpoint')
     return {'status': 'up', 'tensorflowVersion': tf.__version__, 'tensorflowGpu': len(tf.config.experimental.list_physical_devices('GPU')) > 0}
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=rue, port=5000, threaded=rue)
