@@ -7,9 +7,15 @@ import face_rec_api.utils as utils
 import numpy as np
 import time
 
-face_detector = FaceDetector(model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING)
-face_encoder = FaceEncoder(model=config.encoding_model, path=config.INPUT_DIR_MODEL_ENCODING,
-                           path_training=config.INPUT_DIR_MODEL_TRAINING, training=False)
+face_detector = FaceDetector(
+    model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING
+)
+face_encoder = FaceEncoder(
+    model=config.encoding_model,
+    path=config.INPUT_DIR_MODEL_ENCODING,
+    path_training=config.INPUT_DIR_MODEL_TRAINING,
+    training=False,
+)
 
 
 def get_faces(frame):
@@ -19,7 +25,7 @@ def get_faces(frame):
 
 def crop_frame(frame, face):
     (x, y, w, h) = face
-    return frame[y:y + h, x:x + w]
+    return frame[y : y + h, x : x + w]
 
 
 def frame_has_blur(frame):
@@ -30,15 +36,17 @@ def frame_has_blur(frame):
 
 
 def base64_to_numpy_array(encoded_image):
-    raw = encoded_image.split(',')[1]
+    raw = encoded_image.split(",")[1]
     nparr = np.frombuffer(base64.b64decode(raw), np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     return img
 
 
 def numpy_array_to_base64(image):
-    _, bytes_image = cv2.imencode('.webp', image)
-    base64_image = "data:image/webp;base64," + base64.b64encode(bytes_image).decode('utf-8')
+    _, bytes_image = cv2.imencode(".webp", image)
+    base64_image = "data:image/webp;base64," + base64.b64encode(bytes_image).decode(
+        "utf-8"
+    )
     return base64_image
 
 
@@ -49,7 +57,7 @@ def identify_person(cropped):
 
 def save_image(image, directory, filename=None):
     if not filename:
-        filename = f'{time.time()}.webp'
-    utils.ensure_directory(f'datasets/{directory}/')
+        filename = f"{time.time()}.webp"
+    utils.ensure_directory(f"datasets/{directory}/")
     save_path = f"datasets/{directory}/{filename}"
     cv2.imwrite(save_path, image)
