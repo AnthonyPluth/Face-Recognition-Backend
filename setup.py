@@ -7,8 +7,8 @@ requirements = [
     'numpy>=1.16.4',
     'opencv-python>=4.1.0.25',
     'requests>=2.23.0',
-    'tensorflow==1.15.0',
-    # 'tensorflow-gpu==1.15.0',
+    # 'tensorflow==1.15.0',
+    'tensorflow-gpu==1.15.0',
     'uvicorn>=0.11.5',
 ]
 
