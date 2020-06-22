@@ -14,6 +14,8 @@ requirements = [
 ]
 
 tests_require = [
+    "autohooks",
+    "autohooks-plugins-black",
     "coverage>=5.1",
     "pytest>=4.6.11",
     "pytest-black>=0.3.9",
