@@ -2,7 +2,8 @@ from setuptools import setup
 
 requirements = [
     "facenet>=1.0.5",
-    "fastapi>=" "imutils>=0.5.3",
+    "fastapi>=",
+    "imutils>=0.5.3",
     "numpy>=1.16.4",
     "opencv-python>=4.1.0.25",
     "requests>=2.23.0",
@@ -14,9 +15,10 @@ requirements = [
 
 tests_require = [
     "coverage>=5.1",
-    "pytest >= 4.6.11",
+    "pytest>=4.6.11",
+    "pytest-black>=0.3.9",
     "tox>=3.1.0",
-    "WebTest >= 1.3.1",
+    "WebTest>=1.3.1",
 ]
 
 setup(
