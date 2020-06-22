@@ -1,3 +1,2 @@
 [tool.autohooks]
-mode = "pipenv"
 pre-commit = ["autohooks.plugins.black"]
