@@ -41,7 +41,7 @@ async def find_faces_from_snapshot(request: RequestBody):
         cropped_img = image_processing.crop_frame(img, faces[0])
         name, confidence = image_processing.identify_person(cropped_img)
 
-    return {'name': name, 'confidence': confidence, "bboxes": bboxes}
+    return {'name': name, 'confidence': confidence, "bounding_boxes": bboxes}
 
 
 @app.post('/add_person/{name}')
