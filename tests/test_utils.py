@@ -12,6 +12,19 @@ class TestUtils(unittest.TestCase):
         utils.ensure_directory("new_directory_test/")
         self.assertTrue(os.path.exists("new_directory_test"))
 
+    def test_list_images(self):
+        image_list = sorted(list(utils.list_images("tests/reference/")))
+        print(image_list)
+        self.assertEqual(
+            image_list,
+            [
+                "tests/reference/ai_face.webp",
+                "tests/reference/blurry_image.webp",
+                "tests/reference/maddie.webp",
+                "tests/reference/sample_frame.webp",
+            ],
+        )
+
     @classmethod
     def tearDownClass(self):
         import os
