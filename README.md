@@ -4,7 +4,7 @@
 This package will allow you to train and run facial recognition using your computer's webcam.
 
 ## Prerequisites
-- [ ] Python3.7+ and pip installed
+- [ ] Python3.7+ and pip installed<br/>
     Mac:
     ```bash
     brew install python3
@@ -12,7 +12,7 @@ This package will allow you to train and run facial recognition using your compu
     python3 get-pip.py
     ```
 
-    Windows:
+    Windows: <br/>
     Install Python3.7+ by downloading the binary from [here](https://www.python.org/downloads/windows/) and running the binary file.
 
 ## Backend Setup
@@ -32,4 +32,3 @@ Testing is done with tox and will automatically generate a code coverage report
 ```bash
 tox
 ```
-
