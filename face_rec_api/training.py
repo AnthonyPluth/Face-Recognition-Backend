@@ -35,7 +35,7 @@ def test_recognition():
             file_path = subdir_path + "/" + filename
             frame = cv2.imread(file_path)
             face_id, confidence = image_processing.identify_person(frame)
-            print(face_id, confidence)
+            print(subdir_path, face_id, confidence)
 
 
 def prep_images():

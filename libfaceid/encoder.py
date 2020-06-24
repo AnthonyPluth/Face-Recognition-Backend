@@ -1,6 +1,6 @@
 from enum import Enum
 from libfaceid.classifier import FaceClassifierModels, FaceClassifier
-from imutils import paths  # for FaceEncoderModels.LBPH
+from face_rec_api.utils import list_images
 from sklearn.preprocessing import LabelEncoder  # for FaceEncoderModels
 import cv2
 import numpy as np
@@ -119,7 +119,7 @@ class FaceEncoder_LBPH:
         return face_id, confidence
 
     def train(self, face_detector, path_dataset, verify, classifier):
-        imagePaths = sorted(list(paths.list_images(path_dataset)))
+        imagePaths = sorted(list(list_images(path_dataset)))
         faceSamples = []
         ids = []
         knownNames = []

@@ -1,17 +1,9 @@
-# TODO: ADD HANDLING FOR WEBP
-
 import os
 
-
-def ensure_directory(file_path):
-    directory = os.path.dirname("./" + file_path)
-    if not os.path.exists(directory):
-        print("creating directory")
-        os.mkdir(directory)
+image_types = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp")
 
 
 def list_images(basePath, contains=None):
-    image_types = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp")
     # return the set of files that are valid
     return list_files(basePath, validExts=image_types, contains=contains)
 

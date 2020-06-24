@@ -65,6 +65,9 @@ async def add_new_person(
 @app.get("/train_model")
 async def train_model():
     training.run()
+
+    # reload encoder with new data
+
     return {"training status": "complete"}
 
 
@@ -75,3 +78,39 @@ async def status():
         "tensorflowVersion": tf.__version__,
         "tensorflowGpu": len(tf.config.experimental.list_physical_devices("GPU")) > 0,
     }
+
+
+def test_webcam():
+    from imutils.video import VideoStream
+
+    cam = VideoStream(src=0).start()
+    while True:
+        frame = cam.read()
+        if frame is not None:
+            faces = find_faces_in_frame(frame)
+            for face in faces:
+                name, confidence = identify_person(frame)
+                print(name, confidence)
+
+
+if __name__ == "__main__":
+    import cv2
+
+    cap = cv2.VideoCapture(0)
+
+    while True:
+        ret, img = cap.read()
+        print(img.shape)
+        faces = image_processing.get_faces(img)
+
+        bboxes = []
+        for face in faces:
+            (x, y, w, h) = face
+            bboxes.append({"x": int(x), "y": int(y), "w": int(w), "h": int(h)})
+
+        name, confidence = None, None
+        if len(faces) > 0:
+            cropped_img = image_processing.crop_frame(img, faces[0])
+            name, confidence = image_processing.identify_person(cropped_img)
+
+        print(name, confidence)
