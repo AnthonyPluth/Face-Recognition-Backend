@@ -1,10 +1,18 @@
+include:
+  - template: Secret-Detection.gitlab-ci.yml
+
 stages:
+  - secret_detection
   - test
   - qa
   - deploy
 
 before_script:
   - mkdir datasets
+
+secret_detection:
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "true"
 
 test_python:
   image: python:3.7
