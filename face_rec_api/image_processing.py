@@ -1,5 +1,5 @@
-from libfaceid.encoder import FaceEncoder
-from libfaceid.detector import FaceDetector
+# from libfaceid.encoder import FaceEncoder
+# from libfaceid.detector import FaceDetector
 import base64
 import cv2
 import face_rec_api.config as config
@@ -7,20 +7,20 @@ import face_rec_api.utils as utils
 import numpy as np
 import time
 
-face_detector = FaceDetector(
-    model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING
-)
-face_encoder = FaceEncoder(
-    model=config.encoding_model,
-    path=config.INPUT_DIR_MODEL_ENCODING,
-    path_training=config.INPUT_DIR_MODEL_TRAINING,
-    training=False,
-)
+# face_detector = FaceDetector(
+#     model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING
+# )
+# face_encoder = FaceEncoder(
+#     model=config.encoding_model,
+#     path=config.INPUT_DIR_MODEL_ENCODING,
+#     path_training=config.INPUT_DIR_MODEL_TRAINING,
+#     training=False,
+# )
 
 
-def get_faces(frame):
-    faces = face_detector.detect(frame)
-    return faces
+# def get_faces(frame):
+#     faces = face_detector.detect(frame)
+#     return faces
 
 
 def crop_frame(frame, face):

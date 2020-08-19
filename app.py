@@ -1,12 +1,9 @@
 # TODO: make image_processing functions async (again)
-# TODO: switch to websockets?
 
 from face_rec_api import image_processing
 from face_rec_api import training
-from fastapi import Path, FastAPI
+from fastapi import Path, FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import tensorflow as tf
 
 app = FastAPI()
 origins = ["*"]
@@ -20,13 +17,8 @@ app.add_middleware(
 )
 
 
-class RequestBody(BaseModel):
-    snapshot: str = None
-
-
-@app.post("/identify")
-async def find_faces_from_snapshot(request: RequestBody):
-    img = image_processing.base64_to_numpy_array(request.snapshot)
+async def find_faces_from_snapshot(snapshot):
+    img = image_processing.base64_to_numpy_array(snapshot)
     faces = image_processing.get_faces(img)
 
     bboxes = []
@@ -37,16 +29,16 @@ async def find_faces_from_snapshot(request: RequestBody):
     name, confidence = None, None
     if len(faces) > 0:
         cropped_img = image_processing.crop_frame(img, faces[0])
-        name, confidence = image_processing.identify_person(cropped_img)
-
+    #     name, confidence = image_processing.identify_person(cropped_img)
+    #
     return {"name": name, "confidence": confidence, "bounding_boxes": bboxes}
 
 
-@app.post("/add_person/{name}")
-async def add_new_person(
-    request: RequestBody, name: str = Path(..., title="Name of new user")
-):
-    img = image_processing.base64_to_numpy_array(request.snapshot)
+async def add_new_person(request_json):
+    name = request_json["name"]
+    snapshot = request_json["snapshot"]
+
+    img = image_processing.base64_to_numpy_array(snapshot)
     faces = image_processing.get_faces(img)
 
     bboxes = []
@@ -65,7 +57,6 @@ async def add_new_person(
 @app.get("/train_model")
 async def train_model():
     training.run()
-
     # reload encoder with new data
 
     return {"training status": "complete"}
@@ -75,42 +66,17 @@ async def train_model():
 async def status():
     return {
         "status": "up",
-        "tensorflowVersion": tf.__version__,
-        "tensorflowGpu": len(tf.config.experimental.list_physical_devices("GPU")) > 0,
     }
 
 
-def test_webcam():
-    from imutils.video import VideoStream
-
-    cam = VideoStream(src=0).start()
+@app.websocket("/")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
     while True:
-        frame = cam.read()
-        if frame is not None:
-            faces = find_faces_in_frame(frame)
-            for face in faces:
-                name, confidence = identify_person(frame)
-                print(name, confidence)
+        data = await websocket.receive_json()
+        request_type = list(data.keys())[0]
 
-
-if __name__ == "__main__":
-    import cv2
-
-    cap = cv2.VideoCapture(0)
-
-    while True:
-        ret, img = cap.read()
-        print(img.shape)
-        faces = image_processing.get_faces(img)
-
-        bboxes = []
-        for face in faces:
-            (x, y, w, h) = face
-            bboxes.append({"x": int(x), "y": int(y), "w": int(w), "h": int(h)})
-
-        name, confidence = None, None
-        if len(faces) > 0:
-            cropped_img = image_processing.crop_frame(img, faces[0])
-            name, confidence = image_processing.identify_person(cropped_img)
-
-        print(name, confidence)
+        if request_type == "identify":
+            await find_faces_from_snapshot(data["identify"])
+        elif request_type == "record":
+            await add_new_person(data["record"])
