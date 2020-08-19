@@ -1,6 +1,0 @@
-[tool.autohooks]
-pre-commit = ["autohooks.plugins.black"]
-
-[tool.autohooks.plugins.black]
-include = ["*.py"]
-arguments = ["-q", "-t", "py37"]

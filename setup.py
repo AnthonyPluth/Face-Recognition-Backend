@@ -14,11 +14,8 @@ requirements = [
 ]
 
 tests_require = [
-    "autohooks",
-    "autohooks-plugins-black",
     "coverage>=5.1",
     "pytest>=4.6.11",
-    "pytest-black>=0.3.9",
     "tox>=3.1.0",
     "WebTest>=1.3.1",
 ]
@@ -31,6 +28,5 @@ setup(
     packages=["face_rec_api", "libfaceid", "tests"],
     install_requires=requirements,
     tests_require=tests_require,
-    extras_require={"dev": ["autohooks", "autohooks-plugins-black"]},
     zip_safe=False,
 )

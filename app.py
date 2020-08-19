@@ -9,11 +9,10 @@ from pydantic import BaseModel
 import tensorflow as tf
 
 app = FastAPI()
-origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["192.168.0.0/16"],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
@@ -24,15 +23,31 @@ class RequestBody(BaseModel):
     snapshot: str = None
 
 
-@app.post("/identify")
-async def find_faces_from_snapshot(request: RequestBody):
+@app.post("/face/detect")
+async def detect_faces(
+    request: RequestBody
+):
     img = image_processing.base64_to_numpy_array(request.snapshot)
+    faces, bboxes = get_faces(img)
+
+    return bboxes
+
+
+async def get_faces(img):
+    bboxes = []
     faces = image_processing.get_faces(img)
 
-    bboxes = []
     for face in faces:
         (x, y, w, h) = face
         bboxes.append({"x": int(x), "y": int(y), "w": int(w), "h": int(h)})
+
+    return faces, bboxes
+
+
+@app.post("/face/recognize")
+async def recognize_faces(request: RequestBody):
+    img = image_processing.base64_to_numpy_array(request.snapshot)
+    faces, bboxes = get_faces(img)
 
     name, confidence = None, None
     if len(faces) > 0:
@@ -42,17 +57,12 @@ async def find_faces_from_snapshot(request: RequestBody):
     return {"name": name, "confidence": confidence, "bounding_boxes": bboxes}
 
 
-@app.post("/add_person/{name}")
+@app.post("/face/register")
 async def add_new_person(
     request: RequestBody, name: str = Path(..., title="Name of new user")
 ):
     img = image_processing.base64_to_numpy_array(request.snapshot)
-    faces = image_processing.get_faces(img)
-
-    bboxes = []
-    for face in faces:
-        (x, y, w, h) = face
-        bboxes.append({"x": int(x), "y": int(y), "w": int(w), "h": int(h)})
+    faces, bboxes = get_faces(img)
 
     if faces[0]:
         cropped_img = image_processing.crop_frame(img, faces[0])
