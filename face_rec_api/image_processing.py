@@ -1,5 +1,5 @@
 from libfaceid.encoder import FaceEncoder
-from libfaceid.detector import FaceDetector
+from faced import FaceDetector
 import base64
 import cv2
 import face_rec_api.config as config
@@ -7,9 +7,8 @@ import face_rec_api.utils as utils
 import numpy as np
 import time
 
-face_detector = FaceDetector(
-    model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING
-)
+
+face_detector = FaceDetector()
 face_encoder = FaceEncoder(
     model=config.encoding_model,
     path=config.INPUT_DIR_MODEL_ENCODING,
@@ -19,8 +18,8 @@ face_encoder = FaceEncoder(
 
 
 async def get_faces(frame):
-    faces = face_detector.detect(frame)
-    return faces
+    bboxes = face_detector.predict(frame, 0.8)
+    return bboxes
 
 
 async def crop_frame(frame, face):
