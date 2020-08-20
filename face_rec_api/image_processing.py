@@ -18,31 +18,34 @@ face_encoder = FaceEncoder(
 )
 
 
-def get_faces(frame):
+async def get_faces(frame):
     faces = face_detector.detect(frame)
     return faces
 
 
-def crop_frame(frame, face):
+async def crop_frame(frame, face):
     (x, y, w, h) = face
     return frame[y : y + h, x : x + w]
 
 
-def frame_has_blur(frame):
+async def frame_has_blur(frame):
     # compute the Laplacian of the image and then return the focus
     # measure, which is simply the variance of the Laplacian
     blur = cv2.Laplacian(frame, cv2.CV_64F).var()
     return blur < 100
 
 
-def base64_to_numpy_array(encoded_image):
-    raw = encoded_image.split(",")[1]
+async def base64_to_numpy_array(encoded_image):
+    try:
+        raw = encoded_image.split(",")[1]
+    except Exception:
+        raw = encoded_image
     nparr = np.frombuffer(base64.b64decode(raw), np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     return img
 
 
-def numpy_array_to_base64(image):
+async def numpy_array_to_base64(image):
     _, bytes_image = cv2.imencode(".webp", image)
     base64_image = "data:image/webp;base64," + base64.b64encode(bytes_image).decode(
         "utf-8"
@@ -50,12 +53,12 @@ def numpy_array_to_base64(image):
     return base64_image
 
 
-def identify_person(cropped):
+async def identify_person(cropped):
     face_id, confidence = face_encoder.identify(cropped)
     return face_id, confidence
 
 
-def save_image(image, directory, filename=None):
+async def save_image(image, directory, filename=None):
     if not filename:
         filename = f"{time.time()}.webp"
     utils.ensure_directory(f"datasets/{directory}/")
