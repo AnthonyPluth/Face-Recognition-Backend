@@ -4,12 +4,12 @@ requirements = [
     "facenet>=1.0.5",
     "fastapi>=",
     "imutils>=0.5.3",
-    "numpy>=1.16.4",
+#    "numpy>=1.16.4",
     "opencv-python>=4.1.0.25",
     "requests>=2.23.0",
-    "tensorflow==1.15.3",
+    #"tensorflow==1.15.3",
     # if gpu is available, use:
-    # "tensorflow-gpu==1.15.0",
+    "tensorflow-gpu",
     "uvicorn>=0.11.5",
 ]
 

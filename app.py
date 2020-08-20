@@ -18,7 +18,7 @@ app.add_middleware(
 
 async def get_faces(img):
     bboxes = []
-    faces = image_processing.get_faces(img)
+    faces = await image_processing.get_faces(img)
 
     for face in faces:
         (x, y, w, h) = face
@@ -28,32 +28,32 @@ async def get_faces(img):
 
 
 async def detect_faces(snapshot):
-    img = image_processing.base64_to_numpy_array(snapshot)
-    faces, bboxes = get_faces(img)
+    img = await image_processing.base64_to_numpy_array(snapshot)
+    faces, bboxes = await get_faces(img)
 
     return bboxes
 
 
-async def recognize_faces(snapshot: str):
-    img = image_processing.base64_to_numpy_array(snapshot)
-    faces, bboxes = get_faces(img)
+async def recognize_faces(snapshot):
+    img = await image_processing.base64_to_numpy_array(snapshot)
+    faces, bboxes = await get_faces(img)
 
     name, confidence = None, None
     if len(faces) > 0:
-        cropped_img = image_processing.crop_frame(img, faces[0])
-        name, confidence = image_processing.identify_person(cropped_img)
+        cropped_img = await image_processing.crop_frame(img, faces[0])
+        name, confidence = await image_processing.identify_person(cropped_img)
 
     return {"name": name, "confidence": confidence, "bounding_boxes": bboxes}
 
 
 async def register_face(name, snapshot):
-    img = image_processing.base64_to_numpy_array(snapshot)
+    img = await image_processing.base64_to_numpy_array(snapshot)
     faces, bboxes = get_faces(img)
 
     if faces[0]:
-        cropped_img = image_processing.crop_frame(img, faces[0])
+        cropped_img = await image_processing.crop_frame(img, faces[0])
         # save image
-        image_processing.save_image(cropped_img, name)
+        await image_processing.save_image(cropped_img, name)
 
     return bboxes
 
