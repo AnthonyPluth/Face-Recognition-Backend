@@ -1,6 +1,6 @@
 from face_rec_api import image_processing
 from face_rec_api import training
-from fastapi import File, Path, FastAPI, WebSocket
+from fastapi import File, Path, FastAPI, WebSocket, Request, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import tensorflow as tf
@@ -59,18 +59,21 @@ async def register_face(name, snapshot):
 
 
 @app.post("/face/detect")
-async def detect_faces_post(file: bytes = File(...)):
-    return await detect_faces(file)
+async def detect_faces_post(image: list = Form(...)) -> dict:
+    img = await image[0].read()
+    return await detect_faces(img)
 
 
 @app.post("/face/recognize")
-async def recognize_faces_post(file: bytes = File(...)):
-    return await recognize_faces(file)
+async def recognize_faces_post(image: list = Form(...)) -> dict:
+    img = await image[0].read()
+    return await recognize_faces(img)
 
 
 @app.post("/face/register")
-async def register_face(name: str, file: bytes = File(...)):
-    return await register_face(name, file)
+async def register_face(name: str, image: list = Form(...)) -> dict:
+    img = await image[0].read()
+    return await register_face(name, img)
 
 
 @app.get("/train_model")
