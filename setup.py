@@ -2,9 +2,10 @@ from setuptools import setup
 
 requirements = [
     "faced @ git+https://github.com/iitzco/faced.git#egg=faced",
+    "facelib @ git@https://github.com/kutayyildiz/facelib.git#egg=facelib",
     "fastapi",
     "imutils>=0.5.3",
-#    "numpy>=1.16.4",
+    "numpy==1.18.5",
     "opencv-python>=4.1.0.25",
     "requests>=2.23.0",
     "tensorflow-gpu",
