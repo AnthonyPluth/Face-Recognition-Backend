@@ -1,9 +1,8 @@
+from fastapi import FastAPI, WebSocket, Form
+from fastapi.middleware.cors import CORSMiddleware
+
 from face_rec_api import image_processing
 from face_rec_api import training
-from fastapi import File, Path, FastAPI, WebSocket, Request, UploadFile, Form
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import tensorflow as tf
 
 app = FastAPI()
 
@@ -39,7 +38,7 @@ async def recognize_faces(snapshot):
 
 async def register_face(name, snapshot):
     img = await image_processing.base64_to_numpy_array(snapshot)
-    bboxes = get_faces(img)
+    bboxes = await get_faces(img)
 
     if bboxes[0]:
         cropped_img = await image_processing.crop_frame(img, bboxes[0])
@@ -85,11 +84,10 @@ async def websocket_endpoint(websocket: WebSocket):
         if request_type == "identify":
             await recognize_faces(data["identify"])
         elif request_type == "record":
-            name = request_json["name"]
-            snapshot = request_json["snapshot"]
+            name = data["name"]
+            snapshot = data["snapshot"]
             bboxes = await register_face(name, snapshot)
             return {"name": "RECORDING...", "confidence": 0.00, "bboxes": bboxes}
-
 
 # if __name__ == "__main__":
 #     import cv2

@@ -7,7 +7,6 @@ import numpy as np
 import os
 import pickle  # for FaceEncoderModels.OPENFACE and FaceEncoderModels.DLIBRESNET
 
-
 OUTPUT_LBPH_CLASSIFIER = "lbph.yml"
 OUTPUT_LBPH_LABELER = "lbph_le.pickle"
 
@@ -26,7 +25,6 @@ OUTPUT_FACENET_LABELER = "facenet_le.pickle"
 
 
 class FaceEncoderModels(Enum):
-
     LBPH = 0  # [ML] LBPH Local Binary Patterns Histograms
     OPENFACE = 1  # [DL] OpenCV OpenFace
     DLIBRESNET = 2  # [DL] DLIB ResNet
@@ -38,15 +36,15 @@ class FaceEncoderModels(Enum):
 
 class FaceEncoder:
     def __init__(
-        self,
-        model=FaceEncoderModels.DEFAULT,
-        path=None,
-        path_training=None,
-        training=False,
+            self,
+            model=FaceEncoderModels.DEFAULT,
+            path=None,
+            path_training=None,
+            training=False,
     ):
         self._base = None
         if model == FaceEncoderModels.LBPH:
-            self._base = FaceEncoder_LBPH(path, path_training, training)
+            self._base = FaceEncoder_LBPH(path_training, training)
         elif model == FaceEncoderModels.OPENFACE:
             self._base = FaceEncoder_OPENFACE(path, path_training, training)
         elif model == FaceEncoderModels.DLIBRESNET:
@@ -57,26 +55,27 @@ class FaceEncoder:
     def identify(self, frame):
         try:
             return self._base.identify(frame)
-        except:
+        except Exception:
             return "Unknown", 0
 
     def train(
-        self,
-        face_detector,
-        path_dataset,
-        verify=False,
-        classifier=FaceClassifierModels.LINEAR_SVM,
+            self,
+            face_detector,
+            path_dataset,
+            verify=False,
+            classifier=FaceClassifierModels.LINEAR_SVM,
     ):
         try:
-            self._base.train(face_detector, path_dataset, verify, classifier)
+            self._base.train(face_detector, path_dataset, classifier)
             print("Note: Make sure you use the same models for training and testing")
-        except:
+        except Exception:
             return "Training failed! an exception occurred!"
 
 
 class FaceEncoder_Utils:
+    @staticmethod
     def save_training(
-        self, classifier, knownNames, knownEmbeddings, output_clf, output_le
+            classifier, knownNames, knownEmbeddings, output_clf, output_le
     ):
         print(len(knownNames))
         print(len(knownEmbeddings))
@@ -97,11 +96,11 @@ class FaceEncoder_Utils:
 
 
 class FaceEncoder_LBPH:
-    def __init__(self, path=None, path_training=None, training=False):
+    def __init__(self, path_training=None, training=False):
         self._path_training = path_training
         self._label_encoder = None
         self._clf = cv2.face.LBPHFaceRecognizer_create()
-        if training == False:
+        if not training:
             self._clf.read(self._path_training + OUTPUT_LBPH_CLASSIFIER)
             self._label_encoder = pickle.loads(
                 open(self._path_training + OUTPUT_LBPH_LABELER, "rb").read()
@@ -109,8 +108,6 @@ class FaceEncoder_LBPH:
             # print(self._label_encoder.classes_)
 
     def identify(self, frame):
-        face_id = "Unknown"
-        confidence = 99.99
         face = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         id, confidence = self._clf.predict(face)
         if confidence > 99.99:
@@ -118,7 +115,7 @@ class FaceEncoder_LBPH:
         face_id = self._label_encoder.classes_[id]
         return face_id, confidence
 
-    def train(self, face_detector, path_dataset, verify, classifier):
+    def train(self, face_detector, path_dataset, verify):
         imagePaths = sorted(list(list_images(path_dataset)))
         faceSamples = []
         ids = []
@@ -138,7 +135,7 @@ class FaceEncoder_LBPH:
             faces = face_detector.detect(frame)
             for (index, face) in enumerate(faces):
                 (x, y, w, h) = face
-                faceSamples.append(frame_gray[y : y + h, x : x + w])
+                faceSamples.append(frame_gray[y: y + h, x: x + w])
                 knownNames.append(name)
                 ids.append(id)
                 # cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 1)
@@ -159,7 +156,6 @@ class FaceEncoder_LBPH:
         self._clf.write(self._path_training + OUTPUT_LBPH_CLASSIFIER)
 
         le = LabelEncoder()
-        labels = le.fit_transform(knownNames)
         # print(le.classes_)
         # print(labels)
 
@@ -184,8 +180,6 @@ class FaceEncoder_OPENFACE:
             # print(self._label_encoder.classes_)
 
     def identify(self, frame):
-        face_id = "Unknown"
-        confidence = 99.99
         vec = self.encode(frame)
         predictions_face = self._clf.predict(vec)[0]
         id = np.argmax(predictions_face)
@@ -200,7 +194,7 @@ class FaceEncoder_OPENFACE:
         self._embedder.setInput(faceBlob)
         return self._embedder.forward()
 
-    def train(self, face_detector, path_dataset, verify, classifier):
+    def train(self, face_detector, path_dataset, classifier):
         knownEmbeddings = []
         knownNames = []
         imagePaths = sorted(list(paths.list_images(path_dataset)))
@@ -240,8 +234,6 @@ class FaceEncoder_DLIBRESNET:
             # print(self._label_encoder.classes_)
 
     def identify(self, frame, face_rect):
-        face_id = "Unknown"
-        confidence = 99.99
         vec = self.encode(frame, face_rect)
         predictions_face = self._clf.predict(vec)[0]
         # print(predictions_face)
@@ -260,7 +252,7 @@ class FaceEncoder_DLIBRESNET:
         vec = self._embedder.compute_face_descriptor(frame_rgb, shape)
         return np.array([vec])
 
-    def train(self, face_detector, path_dataset, verify, classifier):
+    def train(self, face_detector, path_dataset, classifier):
         knownEmbeddings = []
         knownNames = []
         imagePaths = sorted(list(paths.list_images(path_dataset)))
@@ -282,7 +274,6 @@ class FaceEncoder_DLIBRESNET:
 
 
 class FaceEncoder_FACENET:
-
     _face_crop_size = 160
     _face_crop_margin = 0
 
@@ -322,12 +313,7 @@ class FaceEncoder_FACENET:
 
         #        (x, y, w, h) = face_rect
         if self._face_crop_margin:
-            (x, y, w, h) = (
-                max(x - int(self._face_crop_margin / 2), 0),
-                max(y - int(self._face_crop_margin / 2), 0),
-                min(x + w + int(self._face_crop_margin / 2), frame.shape[1]) - x,
-                min(y + h + int(self._face_crop_margin / 2), frame.shape[0]) - y,
-            )
+            pass
         face = cv2.resize(frame, (160, 160), interpolation=cv2.INTER_LINEAR)
         images_placeholder = tf.compat.v1.get_default_graph().get_tensor_by_name(
             "input:0"
@@ -356,7 +342,7 @@ class FaceEncoder_FACENET:
                 min(y + h + int(self._face_crop_margin / 2), frame.shape[0]) - y,
             )
         face = cv2.resize(
-            frame[y : y + h, x : x + w, :], (160, 160), interpolation=cv2.INTER_LINEAR
+            frame[y: y + h, x: x + w, :], (160, 160), interpolation=cv2.INTER_LINEAR
         )
         images_placeholder = tf.compat.v1.get_default_graph().get_tensor_by_name(
             "input:0"
@@ -372,7 +358,7 @@ class FaceEncoder_FACENET:
         }
         return self._sess.run(embeddings, feed_dict=feed_dict)[0]
 
-    def train(self, face_detector, path_dataset, verify, classifier):
+    def train(self, face_detector, path_dataset, classifier):
         knownEmbeddings = []
         knownNames = []
         imagePaths = sorted(list(paths.list_images(path_dataset)))

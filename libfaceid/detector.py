@@ -33,15 +33,15 @@ class FaceDetector:
         if model == FaceDetectorModels.HAARCASCADE:
             self._base = FaceDetector_HAARCASCADE(path, optimize, minfacesize)
         elif model == FaceDetectorModels.DLIBHOG:
-            self._base = FaceDetector_DLIBHOG(path, optimize, minfacesize)
+            self._base = FaceDetector_DLIBHOG(optimize, minfacesize)
         elif model == FaceDetectorModels.DLIBCNN:
             self._base = FaceDetector_DLIBCNN(path, optimize, minfacesize)
         elif model == FaceDetectorModels.SSDRESNET:
             self._base = FaceDetector_SSDRESNET(path, optimize, minfacesize)
         elif model == FaceDetectorModels.MTCNN:
-            self._base = FaceDetector_MTCNN(path, optimize, minfacesize)
+            self._base = FaceDetector_MTCNN(optimize, minfacesize)
         elif model == FaceDetectorModels.FACENET:
-            self._base = FaceDetector_FACENET(path, optimize, minfacesize)
+            self._base = FaceDetector_FACENET(optimize, minfacesize)
         elif model == FaceDetectorModels.CORAL:
             self._base = FaceDetector_CORAL(path, optimize, minfacesize)
 
@@ -66,7 +66,7 @@ class FaceDetector_HAARCASCADE:
 
 
 class FaceDetector_DLIBHOG:
-    def __init__(self, path, optimize, minfacesize):
+    def __init__(self, optimize, minfacesize):
         import dlib  # lazy loading
 
         self._optimize = optimize
@@ -157,7 +157,7 @@ class FaceDetector_SSDRESNET:
 
 
 class FaceDetector_MTCNN:
-    def __init__(self, path, optimize, minfacesize):
+    def __init__(self, optimize, minfacesize):
         from mtcnn.mtcnn import MTCNN  # lazy loading
 
         self._optimize = optimize
@@ -185,8 +185,6 @@ class FaceDetector_CORAL:
         )
 
     def detect(self, frame):
-        rows = frame.shape[0]
-        cols = frame.shape[1]
         frame = Image.fromarray(np.uint8(frame)).convert("RGB")
         faces = self._detector.detect_with_image(
             frame,
@@ -214,7 +212,7 @@ class FaceDetector_FACENET:
     _threshold = [0.6, 0.7, 0.7]  # three steps's threshold
     _factor = 0.709  # scale factor
 
-    def __init__(self, path, optimize, minfacesize):
+    def __init__(self, optimize, minfacesize):
         import tensorflow as tf  # lazy loading
         import facenet.src.align.detect_face as facenet  # lazy loading
 

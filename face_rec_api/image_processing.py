@@ -7,7 +7,6 @@ import face_rec_api.utils as utils
 import numpy as np
 import time
 
-
 face_detector = FaceDetector()
 face_encoder = FaceEncoder(
     model=config.encoding_model,
@@ -24,7 +23,7 @@ async def get_faces(frame):
 
 async def crop_frame(frame, face):
     (x, y, w, h) = face
-    return frame[y : y + h, x : x + w]
+    return frame[y: y + h, x: x + w]
 
 
 async def frame_has_blur(frame):

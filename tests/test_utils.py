@@ -26,7 +26,7 @@ class TestUtils(unittest.TestCase):
         )
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
         import os
 
         os.rmdir("new_directory_test")

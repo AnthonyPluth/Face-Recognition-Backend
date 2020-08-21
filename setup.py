@@ -2,14 +2,16 @@ from setuptools import setup
 
 requirements = [
     "faced @ git+https://github.com/iitzco/faced.git#egg=faced",
-    "facelib @ git@https://github.com/kutayyildiz/facelib.git#egg=facelib",
-    "fastapi",
+    "fastapi>=0.61.0",
     "imutils>=0.5.3",
     "numpy==1.18.5",
     "opencv-python>=4.1.0.25",
     "requests>=2.23.0",
     "tensorflow-gpu",
     "uvicorn>=0.11.5",
+    "sklearn",
+    "scipy",
+    ""
 ]
 
 tests_require = [
@@ -21,10 +23,10 @@ tests_require = [
 
 setup(
     name="face_rec_api",
-    version=0.6,
+    version=0.7,
     author="Anthony Pluth",
     author_email="abpluth@gmail.com",
-    packages=["face_rec_api", "libfaceid", "tests"],
+    packages=["face_rec_api", "facenet", "libfaceid", "tests"],
     install_requires=requirements,
     tests_require=tests_require,
     zip_safe=False,

@@ -40,7 +40,6 @@ from scipy import misc
 from facenet.src.align import detect_face
 from facenet.src import facenet
 
-
 gpu_memory_fraction = 0.3
 facenet_model_checkpoint = os.path.dirname(__file__) + "/../model_checkpoints/20170512-110547"
 classifier_model = os.path.dirname(__file__) + "/../model_checkpoints/my_classifier_1.pkl"
@@ -140,7 +139,8 @@ class Detection:
         self.face_crop_size = face_crop_size
         self.face_crop_margin = face_crop_margin
 
-    def _setup_mtcnn(self):
+    @staticmethod
+    def _setup_mtcnn():
         with tf.Graph().as_default():
             gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction)
             sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
@@ -151,8 +151,8 @@ class Detection:
         faces = []
 
         bounding_boxes, _ = detect_face.detect_face(image, self.minsize,
-                                                          self.pnet, self.rnet, self.onet,
-                                                          self.threshold, self.factor)
+                                                    self.pnet, self.rnet, self.onet,
+                                                    self.threshold, self.factor)
         for bb in bounding_boxes:
             face = Face()
             face.container_image = image

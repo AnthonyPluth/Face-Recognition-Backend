@@ -47,7 +47,7 @@ class TestImageProcessing(unittest.TestCase):
         self.assertEqual(bytes(known_face), bytes(saved_image))
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
         import os
 
         os.remove("datasets/test/pytest.webp")
