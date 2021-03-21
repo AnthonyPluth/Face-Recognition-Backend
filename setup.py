@@ -6,12 +6,12 @@ requirements = [
     "imutils>=0.5.3",
     "numpy==1.18.5",
     "opencv-python>=4.1.0.25",
+    "pillow>=8.1.2",
     "requests>=2.23.0",
     "tensorflow-gpu",
     "uvicorn>=0.11.5",
     "sklearn",
     "scipy",
-    ""
 ]
 
 tests_require = [
