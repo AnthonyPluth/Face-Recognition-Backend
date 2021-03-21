@@ -8,7 +8,7 @@ requirements = [
     "opencv-python>=4.1.0.25",
     "pillow>=8.1.2",
     "requests>=2.23.0",
-    "tensorflow-gpu",
+    "tensorflow==1.15.3",
     "uvicorn>=0.11.5",
     "sklearn",
     "scipy",
