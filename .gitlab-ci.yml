@@ -15,9 +15,10 @@ secret_detection:
     SECRET_DETECTION_HISTORIC_SCAN: "true"
 
 test_python:
-  image: python:3.7
+  image: python:3.9
   stage: test
   script:
+  - apt install ffmpeg libsm6 libxext6  -y
   - pip3 install tox
   - tox -e py37
   artifacts:
@@ -25,7 +26,7 @@ test_python:
       - htmlcov
 
 qa_lint:
-  image: python:3.7
+  image: python:3.9
   stage: qa
   script:
   - pip3 install tox
