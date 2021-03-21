@@ -18,7 +18,7 @@ test_python:
   image: python:3.9
   stage: test
   script:
-  - apt install ffmpeg libsm6 libxext6  -y
+  - apt install libglu1-mesa-dev  -y
   - pip3 install tox
   - tox -e py37
   artifacts:
