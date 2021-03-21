@@ -20,7 +20,7 @@ test_python:
   - apt update
   - apt install libgl1-mesa-dev  -y
   - pip3 install tox
-  - tox -e py37
+  - tox -e py39
   artifacts:
     paths:
       - htmlcov
