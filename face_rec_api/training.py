@@ -1,6 +1,5 @@
 from face_rec_api.utils import ensure_directory
-from libfaceid.detector import FaceDetector
-from libfaceid.encoder import FaceEncoder
+from deepface import DeepFace
 import cv2
 import face_rec_api.config as config
 import face_rec_api.image_processing as image_processing
@@ -57,12 +56,12 @@ def prep_images():
                 delete_file(file_path, filename)
                 continue
 
-            faces = face_detector.detect(frame)
-            if len(faces) != 1:
-                # Delete images if we don't find exactlty one face
-                print(f"deleting {file_path} due to number of faces")
-                delete_file(file_path, filename)
-                continue
+            # faces = face_detector.detect(frame)
+            # if len(faces) != 1:
+            #     # Delete images if we don't find exactlty one face
+            #     print(f"deleting {file_path} due to number of faces")
+            #     delete_file(file_path, filename)
+            #     continue
 
 
 def delete_file(file_path, filename):

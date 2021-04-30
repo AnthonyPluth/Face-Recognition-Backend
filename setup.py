@@ -11,6 +11,7 @@ requirements = [
     # if gpu is available, use:
     # "tensorflow-gpu==1.15.0",
     "uvicorn>=0.11.5",
+    "deepface>=0.0.49"
 ]
 
 tests_require = [

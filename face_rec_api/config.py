@@ -7,9 +7,7 @@ INPUT_DIR_MODEL_ENCODING = "face_rec_api/models/encoding/"
 INPUT_DIR_MODEL_TRAINING = "face_rec_api/models/training/"
 INPUT_DIR_DATASET = "datasets"
 
-detecting_model = FaceDetectorModels.FACENET
-encoding_model = FaceEncoderModels.FACENET
-classifier_model = FaceClassifierModels.RBF_SVM
+detecting_model = 'DeepFace'
 
 min_confidence = 90
 min_width_to_save = 50

@@ -1,0 +1,66 @@
+Index: setup.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from setuptools import setup\n\nrequirements = [\n    \"faced @ git+https://github.com/iitzco/faced.git#egg=faced\",\n    \"fastapi>=0.61.0\",\n    \"imutils>=0.5.3\",\n    \"numpy==1.18.5\",\n    \"opencv-python>=4.1.0.25\",\n    \"requests>=2.23.0\",\n    \"tensorflow-gpu\",\n    \"uvicorn>=0.11.5\",\n    \"sklearn\",\n    \"scipy\",\n    \"\"\n]\n\ntests_require = [\n    \"coverage>=5.1\",\n    \"pytest>=4.6.11\",\n    \"tox>=3.1.0\",\n    \"WebTest>=1.3.1\",\n]\n\nsetup(\n    name=\"face_rec_api\",\n    version=0.7,\n    author=\"Anthony Pluth\",\n    author_email=\"abpluth@gmail.com\",\n    packages=[\"face_rec_api\", \"facenet\", \"libfaceid\", \"tests\"],\n    install_requires=requirements,\n    tests_require=tests_require,\n    zip_safe=False,\n)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- setup.py	(revision 5e505debfa992c67fb7d447b4005b113261cbbeb)
++++ setup.py	(date 1598302473044)
+@@ -1,17 +1,17 @@
+ from setuptools import setup
+ 
+ requirements = [
+-    "faced @ git+https://github.com/iitzco/faced.git#egg=faced",
+     "fastapi>=0.61.0",
+     "imutils>=0.5.3",
+     "numpy==1.18.5",
+     "opencv-python>=4.1.0.25",
++    "python-multipart>=0.0.5",
+     "requests>=2.23.0",
+-    "tensorflow-gpu",
++    "tensorflow",
++    # "tensorflow-gpu",
+     "uvicorn>=0.11.5",
+     "sklearn",
+     "scipy",
+-    ""
+ ]
+ 
+ tests_require = [
+@@ -26,7 +26,7 @@
+     version=0.7,
+     author="Anthony Pluth",
+     author_email="abpluth@gmail.com",
+-    packages=["face_rec_api", "facenet", "libfaceid", "tests"],
++    packages=["face_rec_api", "faced", "facenet", "libfaceid", "tests"],
+     install_requires=requirements,
+     tests_require=tests_require,
+     zip_safe=False,
+Index: face_rec_api/training.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from face_rec_api.utils import ensure_directory\nfrom libfaceid.detector import FaceDetector\nfrom libfaceid.encoder import FaceEncoder\nimport cv2\nimport face_rec_api.config as config\nimport face_rec_api.image_processing as image_processing\nimport os\n\n\ndef train_recognition(verify):\n    ensure_directory(config.INPUT_DIR_DATASET)\n\n    ensure_directory(config.INPUT_DIR_MODEL_TRAINING)\n    face_detector = FaceDetector(\n        model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING\n    )\n    face_encoder = FaceEncoder(\n        model=config.encoding_model,\n        path=config.INPUT_DIR_MODEL_ENCODING,\n        path_training=config.INPUT_DIR_MODEL_TRAINING,\n        training=True,\n    )\n    face_encoder.train(\n        face_detector,\n        path_dataset=config.INPUT_DIR_DATASET,\n        verify=verify,\n        classifier=config.classifier_model,\n    )\n\n\ndef test_recognition():\n    for subdir in os.listdir(config.INPUT_DIR_DATASET):\n        subdir_path = config.INPUT_DIR_DATASET + \"/\" + subdir\n        for filename in os.listdir(subdir_path):\n            file_path = subdir_path + \"/\" + filename\n            frame = cv2.imread(file_path)\n            face_id, confidence = image_processing.identify_person(frame)\n            print(subdir_path, face_id, confidence)\n\n\ndef prep_images():\n    face_detector = FaceDetector(\n        model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING\n    )\n\n    for subdir in os.listdir(config.INPUT_DIR_DATASET):\n        subdir_path = config.INPUT_DIR_DATASET + \"/\" + subdir\n        for filename in os.listdir(subdir_path):\n            file_path = subdir_path + \"/\" + filename\n            if filename == \".DS_Store\":\n                delete_file(file_path, filename)\n\n            frame = cv2.imread(file_path)\n\n            if image_processing.frame_has_blur(frame):\n                print(f\"deleting {file_path} due to blur\")\n                delete_file(file_path, filename)\n                continue\n\n            faces = face_detector.detect(frame)\n            if len(faces) != 1:\n                # Delete images if we don't find exactlty one face\n                print(f\"deleting {file_path} due to number of faces\")\n                delete_file(file_path, filename)\n                continue\n\n\ndef delete_file(file_path, filename):\n    ensure_directory(\"DELETE/\")\n    os.rename(file_path, \"DELETE/\" + filename)\n\n\ndef run():\n    prep_images()\n    train_recognition(True)\n    test_recognition()\n    print(\"\\nImage dataset training completed!\")\n\n\nif __name__ == \"__main__\":\n    run()\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- face_rec_api/training.py	(revision 5e505debfa992c67fb7d447b4005b113261cbbeb)
++++ face_rec_api/training.py	(date 1598026022584)
+@@ -1,5 +1,5 @@
+ from face_rec_api.utils import ensure_directory
+-from libfaceid.detector import FaceDetector
++from faced import FaceDetector
+ from libfaceid.encoder import FaceEncoder
+ import cv2
+ import face_rec_api.config as config
+@@ -11,9 +11,7 @@
+     ensure_directory(config.INPUT_DIR_DATASET)
+ 
+     ensure_directory(config.INPUT_DIR_MODEL_TRAINING)
+-    face_detector = FaceDetector(
+-        model=config.detecting_model, path=config.INPUT_DIR_MODEL_DETECTING
+-    )
++    face_detector = FaceDetector()
+     face_encoder = FaceEncoder(
+         model=config.encoding_model,
+         path=config.INPUT_DIR_MODEL_ENCODING,
